@@ -1,9 +1,39 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Send } from "lucide-react";
+import { Mail, MapPin, Send, CheckCircle, AlertCircle } from "lucide-react";
+
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xqevblya";
 
 export function Contact() {
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("submitting");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        body: formData,
+        headers: { Accept: "application/json" },
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch {
+      setStatus("error");
+    }
+  };
+
   return (
     <section id="contact" className="relative px-6 py-24 sm:py-32">
       <div className="mx-auto max-w-6xl">
@@ -71,13 +101,7 @@ export function Contact() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="rounded-3xl card-glass p-8 sm:p-10"
           >
-            <form
-              className="space-y-5"
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("This is a demo form. Connect it to your email service or backend to start receiving messages.");
-              }}
-            >
+            <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="space-y-2">
                   <label htmlFor="name" className="text-sm font-medium text-slate-300">
@@ -85,7 +109,9 @@ export function Contact() {
                   </label>
                   <input
                     id="name"
+                    name="name"
                     type="text"
+                    required
                     placeholder="Your name"
                     className="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
@@ -96,7 +122,9 @@ export function Contact() {
                   </label>
                   <input
                     id="email"
+                    name="email"
                     type="email"
+                    required
                     placeholder="you@example.com"
                     className="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                   />
@@ -108,18 +136,35 @@ export function Contact() {
                 </label>
                 <textarea
                   id="idea"
+                  name="message"
                   rows={5}
+                  required
                   placeholder="What problem are you solving? Who is it for?"
                   className="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 />
               </div>
               <button
                 type="submit"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02]"
+                disabled={status === "submitting"}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-500 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-cyan-500/20 transition-transform hover:scale-[1.02] disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 <Send size={18} />
-                Send Message
+                {status === "submitting" ? "Sending..." : "Send Message"}
               </button>
+
+              {status === "success" && (
+                <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 p-3 text-sm text-emerald-300">
+                  <CheckCircle size={16} />
+                  Message sent. I will get back to you soon.
+                </div>
+              )}
+              {status === "error" && (
+                <div className="flex items-center gap-2 rounded-xl bg-rose-500/10 border border-rose-500/20 p-3 text-sm text-rose-300">
+                  <AlertCircle size={16} />
+                  Something went wrong. Please try again or email directly.
+                </div>
+              )}
+
               <p className="text-center text-xs text-slate-500">
                 No spam. I will reply within 24 hours.
               </p>
