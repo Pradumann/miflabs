@@ -143,6 +143,29 @@ export function Contact() {
                   className="w-full rounded-xl border border-slate-700 bg-slate-900/60 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:border-cyan-500 focus:outline-none focus:ring-1 focus:ring-cyan-500"
                 />
               </div>
+
+              <div className="space-y-3">
+                <p className="text-sm font-medium text-slate-300">Which pricing option interests you?</p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/40 px-4 py-3 transition-colors hover:border-slate-500 has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-500/10">
+                    <input type="radio" name="plan" value="Standard Build - €2,000" required className="h-4 w-4 accent-cyan-500" />
+                    <span className="text-sm text-slate-200">Standard Build - €2,000</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/40 px-4 py-3 transition-colors hover:border-slate-500 has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-500/10">
+                    <input type="radio" name="plan" value="Equity Partner - €1,000 + 1%" className="h-4 w-4 accent-cyan-500" />
+                    <span className="text-sm text-slate-200">Equity Partner - €1,000 + 1%</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/40 px-4 py-3 transition-colors hover:border-slate-500 has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-500/10">
+                    <input type="radio" name="plan" value="Builder Stake - €500 + 2%" className="h-4 w-4 accent-cyan-500" />
+                    <span className="text-sm text-slate-200">Builder Stake - €500 + 2%</span>
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/40 px-4 py-3 transition-colors hover:border-slate-500 has-[:checked]:border-cyan-500 has-[:checked]:bg-cyan-500/10">
+                    <input type="radio" name="plan" value="Not sure yet, just exploring" className="h-4 w-4 accent-cyan-500" />
+                    <span className="text-sm text-slate-200">Not sure yet, just exploring</span>
+                  </label>
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={status === "submitting"}
